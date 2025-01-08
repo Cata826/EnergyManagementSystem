@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Device microservice
+  tomcat-db-api2:
+    image: api-image-2  # Image for the Device microservice
+    build:
+      context: .
+#    ports:
+#      - "8081:8081"  # Map port 8081 on the container to host
+    volumes:
+      - volume2:/var/lib/postgres/data
+    environment:
+      DB_IP: db-device
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: devices-db
+      RABBITMQ_HOST: rabbitmq  # IP or container name for RabbitMQ
+      RABBITMQ_PORT: 5672     # RabbitMQ port
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_EXCHANGE: device-exchange
+      RABBITMQ_ROUTING_KEY: device-routing-key
+    deploy:
+      replicas: 2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.devices.rule=Host(`devices.localhost`)"
+      - "traefik.http.routers.devices.entrypoints=web"
+      - "traefik.http.services.devices.loadbalancer.server.port=8081"
+    depends_on:
+      - db-device
+      - rabbitmq  # Ensure RabbitMQ is up before the service starts
+    networks:
+      - my_network1
+#    extra_hosts:
+#      - "devices.localhost:host-gateway"
+  # PostgreSQL database for Device microservice
+  db-device:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: devices-db
+    ports:
+      - "5434:5432"
+    networks:
+      - my_network1
+
+  # RabbitMQ for messaging
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management plugin UI
+    networks:
+      - my_network1
+
+networks:
+  my_network1:
+    external: true
+
+volumes:
+  volume2:

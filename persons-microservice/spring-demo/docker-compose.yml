@@ -1,0 +1,48 @@
+
+version: '3.8'
+
+services:
+  users-api:
+    image: api-image
+    build:
+      context: .
+    volumes:
+      - volume1:/var/lib/postgres/data
+#    ports:
+#      - 8080:8080
+    environment:
+      DB_IP: db-user
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: persons-db
+    deploy:
+      replicas: 2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users-api.rule=Host(`users.localhost`)"
+      - "traefik.http.routers.users-api.entrypoints=web"
+      - "traefik.http.services.users-api.loadbalancer.server.port=8080"
+    depends_on:
+      - db-user
+    networks:
+      - my_network1
+
+  db-user:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: persons-db
+    ports:
+      - "5433:5432"
+    networks:
+      - my_network1
+
+networks:
+  my_network1:
+    external: true
+
+
+volumes:
+  volume1:

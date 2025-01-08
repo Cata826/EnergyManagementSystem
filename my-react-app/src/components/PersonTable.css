@@ -1,0 +1,150 @@
+
+.person-table-container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.person-table-container h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.person-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.person-form input[type="text"],
+.person-form input[type="email"],
+.person-form input[type="password"] {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.person-form input[type="text"]:focus,
+.person-form input[type="email"]:focus,
+.person-form input[type="password"]:focus {
+    border-color: #6c63ff;
+    outline: none;
+}
+
+.person-form label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-left: 10px;
+}
+
+.person-form .form-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.person-form button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #6c63ff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    flex: 1;
+}
+
+.person-form button:hover {
+    background-color: #5753c9;
+}
+
+.person-form button:active {
+    transform: scale(0.98);
+}
+
+.person-form button[type="button"] {
+    background-color: #999;
+}
+
+.person-form button[type="button"]:hover {
+    background-color: #777;
+}
+
+.person-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.person-table th,
+.person-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.person-table th {
+    background-color: #6c63ff;
+    color: #fff;
+    font-weight: 600;
+}
+
+.person-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.person-table button {
+    padding: 8px 10px;
+    margin: 0 5px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.person-table button:hover {
+    opacity: 0.85;
+}
+
+.person-table .edit-button {
+    background-color: #4caf50;
+}
+
+.person-table .delete-button {
+    background-color: #f44336;
+}
+
+@media (max-width: 600px) {
+    .person-form {
+        flex-direction: column;
+    }
+
+    .person-form button {
+        flex: 1;
+        margin-top: 5px;
+    }
+
+    .person-table th, .person-table td {
+        font-size: 14px;
+    }
+}

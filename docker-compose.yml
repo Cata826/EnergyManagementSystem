@@ -1,0 +1,222 @@
+version: '3.8'
+
+networks:
+  my_network1:
+    external: true
+
+services:
+  # Users API Service
+  users-api:
+    image: users-image
+    build:
+      context: /mnt/d/sisteme-distribuite/persons-microservice/spring-demo
+    volumes:
+      - volume1:/var/lib/postgres/data
+    environment:
+      DB_IP: db-user
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: persons-db
+    # deploy:
+    #   replicas: 2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users-api.rule=Host(`users.localhost`)"
+      - "traefik.http.routers.users-api.entrypoints=web"
+      - "traefik.http.services.users-api.loadbalancer.server.port=8080"
+    depends_on:
+      - db-user
+    networks:
+      - my_network1
+    extra_hosts:
+      - "devices.localhost:host-gateway"
+    hostname: users-api-instance  # Numele instanței în rețea
+
+  db-user:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: persons-db
+    ports:
+      - "5433:5432"
+    networks:
+      - my_network1
+
+  # Device API Service
+  devices-api:
+    image: devices-image
+    build:
+      context: /mnt/d/sisteme-distribuite/devices-microservice/spring-demo
+    volumes:
+      - volume2:/var/lib/postgres/data
+    environment:
+      DB_IP: db-device
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: devices-db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_EXCHANGE: device-exchange
+      RABBITMQ_ROUTING_KEY: device-routing-key
+    # deploy:
+    #   replicas: 2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.devices-api.rule=Host(`devices.localhost`)"
+      - "traefik.http.routers.devices-api.entrypoints=web"
+      - "traefik.http.services.devices-api.loadbalancer.server.port=8081"
+    depends_on:
+      - db-device
+      - rabbitmq
+    networks:
+      - my_network1
+    hostname: devices-api-instance  # Numele instanței în rețea
+
+  db-device:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: devices-db
+    ports:
+      - "5434:5432"
+    networks:
+      - my_network1
+
+  # RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - my_network1
+
+  # Monitoring API Service
+  monitoring-api:
+    image: monitoring-image
+    build:
+      context: /mnt/d/demo-sd3/spring-demo
+    volumes:
+      - volume3:/var/lib/postgres/data
+    environment:
+      DB_IP: db-monitoring
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: monitoring-db
+      RABBITMQ_HOST: localhost
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monitoring-api.rule=Host(`monitoring.localhost`)"
+      - "traefik.http.routers.monitoring-api.entrypoints=web"
+      - "traefik.http.services.monitoring-api.loadbalancer.server.port=8082"
+    networks:
+      - my_network1
+    depends_on:
+      - rabbitmq
+      - db-monitoring
+    extra_hosts:
+      - "devices.localhost:host-gateway"
+    hostname: monitoring-api-instance  # Numele instanței în rețea
+
+  db-monitoring:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: monitoring-db
+    ports:
+      - "5435:5432"
+    networks:
+      - my_network1
+
+
+
+  # CHAT MICROSERVICE
+  chat-api:
+    image: chat-image
+    build:
+      context: /mnt/d/chat-microservice/spring-demo
+    volumes:
+      - volume4:/var/lib/postgres/data
+    environment:
+      DB_IP: db-chat
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: chat-db
+      # RABBITMQ_HOST: localhost
+      # RABBITMQ_PORT: 5672
+      # RABBITMQ_USERNAME: guest
+      # RABBITMQ_PASSWORD: guest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat-api.rule=Host(`chat.localhost`)"
+      - "traefik.http.routers.chat-api.entrypoints=web"
+      - "traefik.http.services.chat-api.loadbalancer.server.port=8083"
+    networks:
+      - my_network1
+    depends_on:
+      - db-chat
+    hostname: chat-api-instance  # Numele instanței în rețea
+
+  db-chat:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: chat-db
+    ports:
+      - "5436:5432"
+    networks:
+      - my_network1
+
+
+  # Traefik Reverse Proxy
+  reverse-proxy:
+    image: traefik:v3.2
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --accesslog=true
+      - --accesslog.filepath=/var/log/traefik/access.log
+      - --log.level=DEBUG
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8084:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik_logs:/var/log/traefik
+    networks:
+      - my_network1
+
+  # Frontend React App
+  react-app:
+    image: fe-image
+    build:
+      context: /mnt/d/my-react-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network1
+
+volumes:
+  volume1:
+  volume2:
+  volume3:
+  volume4:
+  traefik_logs:

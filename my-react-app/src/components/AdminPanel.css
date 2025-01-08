@@ -1,0 +1,56 @@
+
+.admin-panel {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.admin-panel h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.admin-panel button {
+    width: 80%;
+    padding: 12px 0;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    background-color: #6c63ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    font-weight: 500;
+}
+
+.admin-panel button:hover {
+    background-color: #5753c9;
+}
+
+.admin-panel button:active {
+    transform: scale(0.98);
+}
+
+.admin-panel button:focus {
+    outline: none;
+}
+
+@media (max-width: 480px) {
+    .admin-panel {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .admin-panel button {
+        font-size: 14px;
+    }
+}

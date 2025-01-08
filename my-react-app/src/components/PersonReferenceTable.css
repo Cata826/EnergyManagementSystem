@@ -1,0 +1,62 @@
+.person-reference-table-container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9fafc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.person-reference-table-container h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.person-reference-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.person-reference-table th,
+.person-reference-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.person-reference-table th {
+    background-color: #4a90e2;
+    color: #fff;
+    font-weight: 600;
+}
+
+.person-reference-table tr:nth-child(even) {
+    background-color: #f3f4f6;
+}
+
+.person-reference-table .delete-button {
+    padding: 8px 12px;
+    color: #fff;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.person-reference-table .delete-button:hover {
+    background-color: #c0392b;
+}
+
+@media (max-width: 600px) {
+    .person-reference-table th, 
+    .person-reference-table td {
+        font-size: 14px;
+    }
+}

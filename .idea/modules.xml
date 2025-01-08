@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../demo-sd3/spring-demo/ds-2020.iml" filepath="$PROJECT_DIR$/../demo-sd3/spring-demo/ds-2020.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devices-microservice/spring-demo/ds-2020 (1).iml" filepath="$PROJECT_DIR$/devices-microservice/spring-demo/ds-2020 (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/persons-microservice/spring-demo/ds-2020 (2).iml" filepath="$PROJECT_DIR$/persons-microservice/spring-demo/ds-2020 (2).iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/sisteme-distribuite.iml" filepath="$PROJECT_DIR$/.idea/sisteme-distribuite.iml" />
+    </modules>
+  </component>
+</project>
