@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  tomcat-db-api3:
+    image: api-image-3
+    build:
+      context: .
+#    ports:
+#      - "8082:8082"
+    volumes:
+      - volume3:/var/lib/postgres/data
+    environment:
+      DB_IP: db-monitoring
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: catalin1234
+      DB_DBNAME: monitoring-db
+      RABBITMQ_HOST: localhost  # Use service name here
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monitoring.rule=Host(`monitoring.localhost`)"
+      - "traefik.http.routers.monitoring.entrypoints=web"
+      - "traefik.http.services.monitoring.loadbalancer.server.port=8082"
+    networks:
+      - my_network1
+    depends_on:
+      - rabbitmq
+      - db-monitoring
+
+  db-monitoring:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: catalin1234
+      POSTGRES_DB: monitoring-db
+    ports:
+      - "5435:5432"
+    networks:
+      - my_network1
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"  # AMQP port
+      - "15672:15672"  # Management plugin UI
+    networks:
+      - my_network1
+
+networks:
+  my_network1:
+    external: true
+
+volumes:
+  volume3:
