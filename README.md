@@ -30,10 +30,5 @@ To get the project up and running on your local machine for development and test
 
 ### Prerequisites
 - Docker
-- Docker Compose
 - Node.js and npm
 
-### Installation
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Cata826/EnergyManagementSystem.git
