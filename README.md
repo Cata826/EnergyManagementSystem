@@ -3,6 +3,8 @@
 ## Overview
 The Energy Management System App is a full-stack application developed using a microservices architecture enhanced with Spring Boot for backend operations and React for the frontend. It features real-time interactions such as chat support and notifications through WebSockets and handles service-to-service communication using RabbitMQ and RestTemplate. Traefik serves as the load-balancing proxy, optimizing the distribution of client requests across multiple services.
 
+![UML Diagram](DD.png) 
+![Deployment Diagram](D.png) 
 ## Features
 - **Real-Time Interactions**: Integrated WebSockets to facilitate real-time communication for features like chat support and instant notifications.
 - **Microservices Communication**: Utilized RabbitMQ for message brokering and RestTemplate for RESTful communication between services.
